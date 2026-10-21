@@ -1,29 +1,42 @@
-#ifndef QUEUE_H
-#define QUEUE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+#ifndef QUEUE_H
+#define QUEUE_H
 
-#define QUEUE_MAX 100
+#define QUEUE_MAX 50
 
-typedef struct {
-    int data[QUEUE_MAX];
+typedef struct
+{
+    int bookingId;
+    long long requesterId;
+    int requesterType;   // 1 = Student, 2 = Faculty
+} BookingRequest;
+
+typedef struct
+{
+    BookingRequest data[QUEUE_MAX];
     int front;
     int rear;
     int size;
-} Queue;
+} BookingQueue;
 
-void initQueue(Queue* queue);
-int isQueueEmpty(Queue* queue);
-int isQueueFull(Queue* queue);
-int enqueue(Queue* queue, int data);
-int dequeue(Queue* queue, int* data);
-int peekQueue(Queue* queue, int* data);
-void displayQueue(Queue* queue);
+void initializeQueue(BookingQueue *q);
 
+int isQueueEmpty(BookingQueue *q);
+
+int isQueueFull(BookingQueue *q);
+
+void enqueue(BookingQueue *q, BookingRequest request);
+
+BookingRequest dequeue(BookingQueue *q);
+
+BookingRequest peekQueue(BookingQueue *q);
+
+void displayQueue(BookingQueue *q);
+
+#endif
 #ifdef __cplusplus
 }
-#endif
-
 #endif

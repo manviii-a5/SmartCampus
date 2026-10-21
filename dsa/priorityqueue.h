@@ -1,32 +1,41 @@
-#ifndef PRIORITYQUEUE_H
-#define PRIORITYQUEUE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+#ifndef PRIORITYQUEUE_H
+#define PRIORITYQUEUE_H
 
 #define PRIORITY_QUEUE_MAX 100
 
-typedef struct {
-    int data;
+typedef struct
+{
+    int emergencyId;
+    long long reporterId;
     int priority;
-} PriorityItem;
+} EmergencyRequest;
 
-typedef struct {
-    PriorityItem items[PRIORITY_QUEUE_MAX];
+typedef struct
+{
+    EmergencyRequest data[PRIORITY_QUEUE_MAX];
     int size;
-} PriorityQueue;
+} EmergencyPriorityQueue;
 
-void initPriorityQueue(PriorityQueue* pq);
-int isPriorityQueueEmpty(PriorityQueue* pq);
-int isPriorityQueueFull(PriorityQueue* pq);
-int enqueuePriority(PriorityQueue* pq, int data, int priority);
-int dequeuePriority(PriorityQueue* pq, PriorityItem* item);
-int peekPriority(PriorityQueue* pq, PriorityItem* item);
-void displayPriorityQueue(PriorityQueue* pq);
+void initializePriorityQueue(EmergencyPriorityQueue *pq);
 
+int isPriorityQueueEmpty(EmergencyPriorityQueue *pq);
+
+int isPriorityQueueFull(EmergencyPriorityQueue *pq);
+
+void enqueueEmergency(EmergencyPriorityQueue *pq,
+                      EmergencyRequest emergency);
+
+EmergencyRequest dequeueEmergency(EmergencyPriorityQueue *pq);
+
+EmergencyRequest peekEmergency(EmergencyPriorityQueue *pq);
+
+void displayEmergencyQueue(EmergencyPriorityQueue *pq);
+
+#endif
 #ifdef __cplusplus
 }
-#endif
-
 #endif

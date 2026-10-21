@@ -2,139 +2,112 @@
 #include <stdlib.h>
 #include "linkedlist.h"
 
-void initList(LinkedList* list)
+StudentNode* createStudentNode(long long studentId)
 {
-    list->head = NULL;
-    list->size = 0;
-}
-
-void insertFront(LinkedList* list, int data)
-{
-    ListNode* newNode = (ListNode*)malloc(sizeof(ListNode));
+    StudentNode *newNode =
+        (StudentNode*)malloc(sizeof(StudentNode));
 
     if (newNode == NULL)
     {
         printf("Memory allocation failed.\n");
-        return;
+        return NULL;
     }
 
-    newNode->data = data;
-    newNode->next = list->head;
-
-    list->head = newNode;
-    list->size++;
-}
-
-void insertEnd(LinkedList* list, int data)
-{
-    ListNode* newNode = (ListNode*)malloc(sizeof(ListNode));
-
-    if (newNode == NULL)
-    {
-        printf("Memory allocation failed.\n");
-        return;
-    }
-
-    newNode->data = data;
+    newNode->studentId = studentId;
     newNode->next = NULL;
 
-    if (list->head == NULL)
-    {
-        list->head = newNode;
-    }
-    else
-    {
-        ListNode* temp = list->head;
-
-        while (temp->next != NULL)
-            temp = temp->next;
-
-        temp->next = newNode;
-    }
-
-    list->size++;
+    return newNode;
 }
 
-int deleteValue(LinkedList* list, int data)
+void insertStudent(StudentNode **head, long long studentId)
 {
-    if (list->head == NULL)
-        return 0;
+    StudentNode *newNode = createStudentNode(studentId);
 
-    ListNode* temp = list->head;
-    ListNode* prev = NULL;
+    if (newNode == NULL)
+        return;
 
-    while (temp != NULL)
+    if (*head == NULL)
     {
-        if (temp->data == data)
-        {
-            if (prev == NULL)
-                list->head = temp->next;
-            else
-                prev->next = temp->next;
+        *head = newNode;
+        return;
+    }
 
-            free(temp);
-            list->size--;
+    StudentNode *temp = *head;
 
-            return 1;
-        }
+    while (temp->next != NULL)
+        temp = temp->next;
 
+    temp->next = newNode;
+}
+
+void deleteStudent(StudentNode **head, long long studentId)
+{
+    if (*head == NULL)
+        return;
+
+    StudentNode *temp = *head;
+    StudentNode *prev = NULL;
+
+    if (temp->studentId == studentId)
+    {
+        *head = temp->next;
+        free(temp);
+        return;
+    }
+
+    while (temp != NULL && temp->studentId != studentId)
+    {
         prev = temp;
         temp = temp->next;
     }
 
-    return 0;
+    if (temp == NULL)
+        return;
+
+    prev->next = temp->next;
+    free(temp);
 }
 
-int searchList(LinkedList* list, int data)
+StudentNode* searchStudent(StudentNode *head, long long studentId)
 {
-    ListNode* temp = list->head;
+    StudentNode *temp = head;
 
     while (temp != NULL)
     {
-        if (temp->data == data)
-            return 1;
+        if (temp->studentId == studentId)
+            return temp;
 
         temp = temp->next;
     }
 
-    return 0;
+    return NULL;
 }
 
-void displayList(LinkedList* list)
+void displayStudents(StudentNode *head)
 {
-    ListNode* temp = list->head;
-
-    if (temp == NULL)
+    if (head == NULL)
     {
-        printf("List is empty.\n");
+        printf("No students found.\n");
         return;
     }
 
-    printf("Linked List: ");
+    StudentNode *temp = head;
 
     while (temp != NULL)
     {
-        printf("%d", temp->data);
-
-        if (temp->next != NULL)
-            printf(" -> ");
-
+        printf("Student ID: %lld\n", temp->studentId);
         temp = temp->next;
     }
-
-    printf("\n");
 }
 
-void freeList(LinkedList* list)
+void freeStudentList(StudentNode **head)
 {
-    ListNode* temp;
+    StudentNode *temp;
 
-    while (list->head != NULL)
+    while (*head != NULL)
     {
-        temp = list->head;
-        list->head = list->head->next;
+        temp = *head;
+        *head = (*head)->next;
         free(temp);
     }
-
-    list->size = 0;
 }

@@ -1,65 +1,114 @@
 #include <stdio.h>
+#include <string.h>
 #include "stack.h"
 
-void initStack(Stack* stack)
+void initializeStack(UndoStack *stack)
 {
     stack->top = -1;
+    stack->size = 0;
 }
 
-int isStackEmpty(Stack* stack)
+int isStackEmpty(UndoStack *stack)
 {
-    return stack->top == -1;
+    return stack->size == 0;
 }
 
-int isStackFull(Stack* stack)
+int isStackFull(UndoStack *stack)
 {
-    return stack->top == STACK_MAX - 1;
+    return stack->size == STACK_MAX;
 }
 
-int push(Stack* stack, int data)
+void pushUndo(UndoStack *stack, UndoOperation operation)
 {
+    /*
+        If the stack is full, remove the oldest record.
+
+        Since the stack stores records from bottom to top,
+        data[0] is the oldest operation.
+    */
+
     if (isStackFull(stack))
-        return 0;
+    {
+        for (int i = 1; i < STACK_MAX; i++)
+        {
+            stack->data[i - 1] = stack->data[i];
+        }
 
-    stack->data[++stack->top] = data;
+        stack->top = STACK_MAX - 2;
+        stack->size = STACK_MAX - 1;
+    }
 
-    return 1;
+    stack->top++;
+    stack->data[stack->top] = operation;
+    stack->size++;
 }
 
-int pop(Stack* stack, int* data)
+UndoOperation popUndo(UndoStack *stack)
 {
+    UndoOperation emptyOperation;
+
+    emptyOperation.operationId = -1;
+    emptyOperation.operationType = -1;
+    strcpy(emptyOperation.description, "");
+
     if (isStackEmpty(stack))
-        return 0;
+    {
+        printf("Undo stack is empty.\n");
+        return emptyOperation;
+    }
 
-    *data = stack->data[stack->top--];
+    UndoOperation operation = stack->data[stack->top];
 
-    return 1;
+    stack->top--;
+    stack->size--;
+
+    return operation;
 }
 
-int peek(Stack* stack, int* data)
+UndoOperation peekUndo(UndoStack *stack)
 {
+    UndoOperation emptyOperation;
+
+    emptyOperation.operationId = -1;
+    emptyOperation.operationType = -1;
+    strcpy(emptyOperation.description, "");
+
     if (isStackEmpty(stack))
-        return 0;
+    {
+        printf("Undo stack is empty.\n");
+        return emptyOperation;
+    }
 
-    *data = stack->data[stack->top];
-
-    return 1;
+    return stack->data[stack->top];
 }
 
-void displayStack(Stack* stack)
+void displayUndoStack(UndoStack *stack)
 {
     if (isStackEmpty(stack))
     {
-        printf("Stack is empty.\n");
+        printf("No operations available for undo.\n");
         return;
     }
 
-    printf("Stack (Top -> Bottom): ");
+    printf("\n========== UNDO STACK ==========\n");
 
     for (int i = stack->top; i >= 0; i--)
     {
-        printf("%d ", stack->data[i]);
-    }
+        printf("Operation ID : %d\n",
+               stack->data[i].operationId);
 
-    printf("\n");
+        printf("Operation Type : %d\n",
+               stack->data[i].operationType);
+
+        printf("Description : %s\n",
+               stack->data[i].description);
+
+        printf("--------------------------------\n");
+    }
+}
+
+void clearUndoStack(UndoStack *stack)
+{
+    stack->top = -1;
+    stack->size = 0;
 }

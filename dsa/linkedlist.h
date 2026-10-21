@@ -1,33 +1,28 @@
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-#ifdef __cplusplus
-extern "C"
-{
+typedef struct StudentNode {
+    long long studentId;
+    struct StudentNode *next;
+} StudentNode;
+
+StudentNode* createStudentNode(long long studentId);
+
+void insertStudent(StudentNode **head, long long studentId);
+
+void deleteStudent(StudentNode **head, long long studentId);
+
+StudentNode* searchStudent(StudentNode *head, long long studentId);
+
+void displayStudents(StudentNode *head);
+
+void freeStudentList(StudentNode **head);
+
 #endif
-
-    typedef struct ListNode
-    {
-        int data;
-        struct ListNode *next;
-    } ListNode;
-
-    typedef struct
-    {
-        ListNode *head;
-        int size;
-    } LinkedList;
-
-    void initList(LinkedList *list);
-    void insertFront(LinkedList *list, int data);
-    void insertEnd(LinkedList *list, int data);
-    int deleteValue(LinkedList *list, int data);
-    int searchList(LinkedList *list, int data);
-    void displayList(LinkedList *list);
-    void freeList(LinkedList *list);
-
 #ifdef __cplusplus
 }
-#endif
-
 #endif

@@ -1,27 +1,42 @@
-#ifndef STACK_H
-#define STACK_H
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+#ifndef STACK_H
+#define STACK_H
 
-#define STACK_MAX 100
+#define STACK_MAX 50
 
-typedef struct {
-    int data[STACK_MAX];
+typedef struct
+{
+    int operationId;
+    int operationType;
+    char description[200];
+} UndoOperation;
+
+typedef struct
+{
+    UndoOperation data[STACK_MAX];
     int top;
-} Stack;
+    int size;
+} UndoStack;
 
-void initStack(Stack* stack);
-int isStackEmpty(Stack* stack);
-int isStackFull(Stack* stack);
-int push(Stack* stack, int data);
-int pop(Stack* stack, int* data);
-int peek(Stack* stack, int* data);
-void displayStack(Stack* stack);
+void initializeStack(UndoStack *stack);
 
+int isStackEmpty(UndoStack *stack);
+
+int isStackFull(UndoStack *stack);
+
+void pushUndo(UndoStack *stack, UndoOperation operation);
+
+UndoOperation popUndo(UndoStack *stack);
+
+UndoOperation peekUndo(UndoStack *stack);
+
+void displayUndoStack(UndoStack *stack);
+
+void clearUndoStack(UndoStack *stack);
+
+#endif
 #ifdef __cplusplus
 }
-#endif
-
 #endif

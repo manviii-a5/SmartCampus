@@ -1,75 +1,86 @@
 #include <stdio.h>
 #include "queue.h"
 
-void initQueue(Queue* queue)
+void initializeQueue(BookingQueue *q)
 {
-    queue->front = 0;
-    queue->rear = -1;
-    queue->size = 0;
+    q->front = 0;
+    q->rear = -1;
+    q->size = 0;
 }
 
-int isQueueEmpty(Queue* queue)
+int isQueueEmpty(BookingQueue *q)
 {
-    return queue->size == 0;
+    return q->size == 0;
 }
 
-int isQueueFull(Queue* queue)
+int isQueueFull(BookingQueue *q)
 {
-    return queue->size == QUEUE_MAX;
+    return q->size == QUEUE_MAX;
 }
 
-int enqueue(Queue* queue, int data)
+void enqueue(BookingQueue *q, BookingRequest request)
 {
-    if (isQueueFull(queue))
-        return 0;
-
-    queue->rear = (queue->rear + 1) % QUEUE_MAX;
-    queue->data[queue->rear] = data;
-    queue->size++;
-
-    return 1;
-}
-
-int dequeue(Queue* queue, int* data)
-{
-    if (isQueueEmpty(queue))
-        return 0;
-
-    *data = queue->data[queue->front];
-
-    queue->front = (queue->front + 1) % QUEUE_MAX;
-    queue->size--;
-
-    return 1;
-}
-
-int peekQueue(Queue* queue, int* data)
-{
-    if (isQueueEmpty(queue))
-        return 0;
-
-    *data = queue->data[queue->front];
-
-    return 1;
-}
-
-void displayQueue(Queue* queue)
-{
-    if (isQueueEmpty(queue))
+    if (isQueueFull(q))
     {
-        printf("Queue is empty.\n");
+        printf("Booking queue is full.\n");
         return;
     }
 
-    printf("Queue (Front -> Rear): ");
+    q->rear = (q->rear + 1) % QUEUE_MAX;
+    q->data[q->rear] = request;
+    q->size++;
+}
 
-    int index = queue->front;
+BookingRequest dequeue(BookingQueue *q)
+{
+    BookingRequest emptyRequest = {-1, -1, -1};
 
-    for (int i = 0; i < queue->size; i++)
+    if (isQueueEmpty(q))
     {
-        printf("%d ", queue->data[index]);
-        index = (index + 1) % QUEUE_MAX;
+        printf("Booking queue is empty.\n");
+        return emptyRequest;
     }
 
-    printf("\n");
+    BookingRequest request = q->data[q->front];
+
+    q->front = (q->front + 1) % QUEUE_MAX;
+    q->size--;
+
+    return request;
+}
+
+BookingRequest peekQueue(BookingQueue *q)
+{
+    BookingRequest emptyRequest = {-1, -1, -1};
+
+    if (isQueueEmpty(q))
+    {
+        printf("Booking queue is empty.\n");
+        return emptyRequest;
+    }
+
+    return q->data[q->front];
+}
+
+void displayQueue(BookingQueue *q)
+{
+    if (isQueueEmpty(q))
+    {
+        printf("Booking queue is empty.\n");
+        return;
+    }
+
+    int index = q->front;
+
+    printf("\n--- Booking Queue ---\n");
+
+    for (int i = 0; i < q->size; i++)
+    {
+        printf("Booking ID: %d | Requester ID: %lld | Type: %s\n",
+               q->data[index].bookingId,
+               q->data[index].requesterId,
+               q->data[index].requesterType == 1 ? "Student" : "Faculty");
+
+        index = (index + 1) % QUEUE_MAX;
+    }
 }
