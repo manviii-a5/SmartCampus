@@ -1,31 +1,32 @@
+#include "../include/Student.h"
 #include <iostream>
-#include "Student.h"
 
 Student::Student()
 {
     studentId = 0;
-    name = "";
-    course = "";
-    branch = "";
     semester = 0;
 }
 
-Student::Student(
-    int studentId,
-    const std::string& name,
-    const std::string& course,
-    const std::string& branch,
-    int semester
-)
+Student::Student(long long studentId,
+                 const std::string &name,
+                 const std::string &course,
+                 const std::string &branch,
+                 int semester,
+                 const std::string &email,
+                 const std::string &phone,
+                 const std::string &password)
 {
     this->studentId = studentId;
     this->name = name;
     this->course = course;
     this->branch = branch;
     this->semester = semester;
+    this->email = email;
+    this->phone = phone;
+    this->password = password;
 }
 
-int Student::getStudentId() const
+long long Student::getStudentId() const
 {
     return studentId;
 }
@@ -50,11 +51,49 @@ int Student::getSemester() const
     return semester;
 }
 
-void Student::display() const
+std::string Student::getEmail() const
 {
-    std::cout << "Student ID : " << studentId << "\n";
-    std::cout << "Name       : " << name << "\n";
-    std::cout << "Course     : " << course << "\n";
-    std::cout << "Branch     : " << branch << "\n";
-    std::cout << "Semester   : " << semester << "\n";
+    return email;
+}
+
+std::string Student::getPhone() const
+{
+    return phone;
+}
+
+std::string Student::getPassword() const
+{
+    return password;
+}
+
+void Student::setEmail(const std::string &email)
+{
+    this->email = email;
+}
+
+void Student::setPhone(const std::string &phone)
+{
+    this->phone = phone;
+}
+
+void Student::setPassword(const std::string &password)
+{
+    this->password = password;
+}
+
+bool Student::checkPassword(const std::string &password) const
+{
+    return this->password == password;
+}
+
+void Student::displayProfile() const
+{
+    std::cout << "\n========== STUDENT PROFILE ==========\n";
+    std::cout << "Student ID : " << studentId << '\n';
+    std::cout << "Name       : " << name << '\n';
+    std::cout << "Course     : " << course << '\n';
+    std::cout << "Branch     : " << branch << '\n';
+    std::cout << "Semester   : " << semester << '\n';
+    std::cout << "Email      : " << email << '\n';
+    std::cout << "Phone      : " << phone << '\n';
 }
